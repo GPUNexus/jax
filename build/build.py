@@ -251,6 +251,7 @@ def write_bazelrc(*, remote_build,
         """))
 
     if use_clang:
+      f.write(f"build --action_env=CLANG_CUDA_COMPILER_PATH={clang_path}\n")
       f.write(f'build --action_env CLANG_COMPILER_PATH="{clang_path}"\n')
       f.write(f'build --repo_env CC="{clang_path}"\n')
       f.write(f'build --repo_env BAZEL_COMPILER="{clang_path}"\n')
@@ -287,7 +288,6 @@ def write_bazelrc(*, remote_build,
         f.write("build --config=nonccl\n")
       if use_clang:
         f.write("build --config=nvcc_clang\n")
-        f.write(f"build --action_env=CLANG_CUDA_COMPILER_PATH={clang_path}\n")
       if cuda_version:
         f.write("build --repo_env HERMETIC_CUDA_VERSION=\"{cuda_version}\"\n"
                 .format(cuda_version=cuda_version))
