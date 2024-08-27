@@ -65,7 +65,9 @@ def bitcast(x, ty: DTypeLike):
   ty = dtypes.canonicalize_dtype(ty)
   if len(x.shape) < 2:
     raise ValueError("Not implemented: bitcast 1D")
-  if x.shape[-2] * x.dtype.itemsize % ty.itemsize:
+  src_bitwidth = x.dtype.itemsize * 8 if x.dtype != jnp.int4 else 4
+  dst_bitwidth = ty.itemsize * 8 if ty != jnp.int4 else 4
+  if x.shape[-2] * src_bitwidth % dst_bitwidth:
     raise ValueError(
         "Not implemented: the 2nd minor dim can not be perfectly packed or"
         " unpacked"
